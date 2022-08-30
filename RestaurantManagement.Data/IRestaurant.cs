@@ -8,7 +8,9 @@ namespace RestaurantManagement.Data
 {
     public interface IRestaurantData
     {
-        public IEnumerable<Restaurant> GetList();
+        public IEnumerable<Restaurant> GetRestaurantByName(string name = null);
+
+        public Restaurant GetRestaurantById(int id);
     }
 
     public class InMemoryRestaurant : IRestaurantData
@@ -26,11 +28,17 @@ namespace RestaurantManagement.Data
 
         }
 
-        public IEnumerable<Restaurant> GetList()  
+        public IEnumerable<Restaurant> GetRestaurantByName(string name = null)  
         {
             return from r in restaurants
+                   where string.IsNullOrWhiteSpace(name) || r.Name.StartsWith(name)
                    orderby r.Name
                    select r;
+        }
+
+        public Restaurant GetRestaurantById(int id)
+        {
+            return restaurants.FirstOrDefault(r => r.Id == id);
         }
     }
 }
